@@ -38,7 +38,10 @@ export const AnalyticsProvider = ({ children }) => {
         language: navigator.language
       };
 
-      await axios.post('/api/analytics/page-view', pageData);
+      // Only try to send to backend if we're in development or have a backend
+      if (process.env.NODE_ENV === 'development') {
+        await axios.post('/api/analytics/page-view', pageData);
+      }
       
       setAnalytics(prev => ({
         ...prev,
@@ -49,7 +52,10 @@ export const AnalyticsProvider = ({ children }) => {
         totalVisits: prev.totalVisits + 1
       }));
     } catch (error) {
-      console.error('Failed to track page view:', error);
+      // Silently handle analytics errors in production
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to track page view:', error);
+      }
     }
   }, []);
 
@@ -63,14 +69,20 @@ export const AnalyticsProvider = ({ children }) => {
         page: location.pathname
       };
 
-      await axios.post('/api/analytics/interaction', interactionData);
+      // Only try to send to backend if we're in development or have a backend
+      if (process.env.NODE_ENV === 'development') {
+        await axios.post('/api/analytics/interaction', interactionData);
+      }
       
       setAnalytics(prev => ({
         ...prev,
         interactions: [...prev.interactions, interactionData]
       }));
     } catch (error) {
-      console.error('Failed to track interaction:', error);
+      // Silently handle analytics errors in production
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to track interaction:', error);
+      }
     }
   }, [location.pathname]);
 
@@ -179,9 +191,12 @@ export const AnalyticsProvider = ({ children }) => {
       language: navigator.language
     };
 
-    axios.post('/api/analytics/session', sessionData).catch(error => {
-      console.error('Failed to track session:', error);
-    });
+    // Only try to send to backend if we're in development or have a backend
+    if (process.env.NODE_ENV === 'development') {
+      axios.post('/api/analytics/session', sessionData).catch(error => {
+        console.error('Failed to track session:', error);
+      });
+    }
   }, []);
 
   const value = {
