@@ -14,10 +14,14 @@ export const useVoice = () => {
 export const VoiceProvider = ({ children }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const [isSupported] = useState(
-    typeof window !== 'undefined' && 
-    (window.SpeechRecognition || window.webkitSpeechRecognition)
-  );
+  const [isSupported] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+    } catch (error) {
+      return false;
+    }
+  });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -73,7 +77,14 @@ export const VoiceProvider = ({ children }) => {
     };
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    let recognition;
+    try {
+      recognition = new SpeechRecognition();
+    } catch (error) {
+      console.error('SpeechRecognition constructor error:', error);
+      setError('Speech recognition not supported in this browser');
+      return null;
+    }
 
     recognition.continuous = true;
     recognition.interimResults = true;
