@@ -72,7 +72,8 @@ jspm_packages/
 
 # Gatsby files
 .cache/
-public
+# Allow public folder
+!public/
 
 # Storybook build outputs
 .out
@@ -100,8 +101,9 @@ Thumbs.db
 
 # Server specific
 server/logs/
-server/uploads/
 server/.env
+# Allow uploads folder
+!server/uploads/
 
 # Build artifacts
 client/build/
