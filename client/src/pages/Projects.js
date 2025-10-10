@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { 
@@ -20,7 +20,7 @@ const Projects = () => {
   const { trackInteraction } = useAnalytics();
 
   // Sample projects data
-  const sampleProjects = [
+  const sampleProjects = useMemo(() => [
     {
       id: 1,
       title: 'DSAlytics',
@@ -112,7 +112,7 @@ const Projects = () => {
       stars: 0,
       views: 0
     }
-  ];
+  ], []);
   
 
   const categories = [
