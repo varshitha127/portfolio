@@ -7,7 +7,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.2",
-    "build": "^0.1.4",
     "chart.js": "^4.4.0",
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.294.0",

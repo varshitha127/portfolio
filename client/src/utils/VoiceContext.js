@@ -14,7 +14,10 @@ export const useVoice = () => {
 export const VoiceProvider = ({ children }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const [isSupported] = useState(false);
+  const [isSupported] = useState(
+    typeof window !== 'undefined' && 
+    (window.SpeechRecognition || window.webkitSpeechRecognition)
+  );
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 

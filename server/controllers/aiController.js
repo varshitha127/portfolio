@@ -214,9 +214,35 @@ const chat = async (req, res) => {
 
     If you have any questions or need further information, please ask!`;
 
-    // ... existing code ...
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...history.map(msg => ({
+          role: msg.type === 'user' ? 'user' : 'assistant',
+          content: msg.content
+        })),
+        { role: "user", content: message }
+      ],
+      max_tokens: 500,
+      temperature: 0.7
+    });
+
+    const response = completion.choices[0].message.content;
+
+    res.json({
+      success: true,
+      response: response,
+      timestamp: new Date().toISOString()
+    });
+
   } catch (error) {
-    // ... existing code ...
+    logger.error('AI Chat error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to process chat message',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 

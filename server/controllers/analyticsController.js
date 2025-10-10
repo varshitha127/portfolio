@@ -27,52 +27,39 @@ const trackSession = (req, res) => {
 };
 
 const getDashboard = (req, res) => {
-  // Return a structure the client expects
-  // This is static sample data; replace with real aggregation/stats if available
-  const dashboard = {
+  res.status(200).json({
     totalVisits: 1234,
     pageViews: {
-      '/': 350,
-      '/about': 210,
-      '/skills': 180,
-      '/projects': 240,
-      '/resume': 120,
-      '/contact': 80,
-      '/ai': 54
+      '/': 500,
+      '/about': 200,
+      '/projects': 300,
+      '/contact': 100,
+      '/ai-chat': 134
     },
     interactions: [
-      { type: 'cta_click', page: '/projects', timestamp: new Date().toISOString() },
-      { type: 'page_view', page: '/ai', timestamp: new Date().toISOString() },
-      { type: 'download', page: '/resume', timestamp: new Date().toISOString() },
+      { type: 'cta_click', details: { type: 'view_projects' }, timestamp: new Date(), page: '/' },
+      { type: 'social_click', details: { platform: 'linkedin' }, timestamp: new Date(), page: '/' },
+      { type: 'ai_chat_message', details: { message: 'Hello' }, timestamp: new Date(), page: '/ai-chat' },
+      { type: 'download', details: { fileType: 'pdf', fileName: 'resume.pdf' }, timestamp: new Date(), page: '/contact' },
+      { type: 'contact_form_submit', details: { name: 'John Doe' }, timestamp: new Date(), page: '/contact' }
     ],
     downloads: {
-      resume: 42
+      'pdf': 10,
+      'doc': 5
     },
     contactSubmissions: [],
-    feedback: []
-  };
-
-  res.status(200).json(dashboard);
+    feedback: [],
+    sessionStart: new Date(),
+  });
 };
 
 const getInsights = (req, res) => {
-  // Return an array of insights objects as expected by the client UI
-  const insights = [
-    {
-      title: 'Rising Interest in Projects',
-      description: 'Project page views increased 15% in the last 7 days compared to the prior period.'
-    },
-    {
-      title: 'High Engagement with AI Chat',
-      description: 'Users who open the AI Chat spend 2.3x longer on the site on average.'
-    },
-    {
-      title: 'Resume Downloads Trend',
-      description: 'Resume downloads peak on weekdays between 10:00 and 13:00 local time.'
-    }
-  ];
-
-  res.status(200).json(insights);
+  res.status(200).json([
+    { title: 'High Engagement', description: 'Users spend an average of 3 minutes on project pages.' },
+    { title: 'AI Chat Popularity', description: 'AI Chatbot is used by 40% of visitors.' },
+    { title: 'Resume Downloads', description: 'Resume downloaded 15 times this week.' },
+    { title: 'Mobile Traffic', description: '55% of traffic comes from mobile devices.' }
+  ]);
 };
 
 module.exports = {
