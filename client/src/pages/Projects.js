@@ -7,22 +7,17 @@ import {
   Github, 
   Eye,
   Code,
-  Sparkles,
   Star,
   Calendar
 } from 'lucide-react';
 import { useAnalytics } from '../utils/AnalyticsContext';
-import { useAI } from '../utils/AIContext';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [showRecommendations, setShowRecommendations] = useState(false);
-  const [recommendations, setRecommendations] = useState([]);
   const { trackInteraction } = useAnalytics();
-  const { getProjectRecommendations } = useAI();
 
   // Sample projects data
   const sampleProjects = [
@@ -136,7 +131,7 @@ const Projects = () => {
   useEffect(() => {
     setProjects(sampleProjects);
     setFilteredProjects(sampleProjects);
-  }, []);
+  }, [sampleProjects]);
 
   useEffect(() => {
     const filtered = projects.filter(project => {
