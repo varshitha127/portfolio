@@ -13,6 +13,13 @@ Your portfolio is now ready for deployment on Vercel! Here's how to deploy it:
 6. **Output Directory**: `build`
 7. **Install Command**: `npm install`
 
+**OR Use the monorepo approach (Recommended):**
+1. Import your GitHub repository: `https://github.com/varshitha127/portfolio`
+2. **Root Directory**: Leave as root (don't change)
+3. **Build Command**: `cd client && npm run build`
+4. **Output Directory**: `client/build`
+5. **Install Command**: `npm run install:all`
+
 ### Step 2: Deploy Backend (Server)
 1. Create another Vercel project
 2. Import the same repository: `https://github.com/varshitha127/portfolio`
@@ -97,6 +104,28 @@ Portfolio/
 - Use environment variables for all sensitive data
 - The `env.example` file shows required variables
 - Copy it to `.env` and fill in your actual values
+
+## 🔧 Troubleshooting
+
+### Build Error: "Could not find a required file. Name: index.html"
+**Solution**: Use the correct Vercel settings:
+- **Root Directory**: `client` (not root)
+- **Build Command**: `npm run build`
+- **Output Directory**: `build`
+- **Install Command**: `npm install`
+
+### Alternative: Monorepo Deployment
+If the above doesn't work, try the monorepo approach:
+- **Root Directory**: Leave as root
+- **Build Command**: `cd client && npm run build`
+- **Output Directory**: `client/build`
+- **Install Command**: `npm run install:all`
+
+### Common Issues:
+1. **Missing index.html**: Ensure you're building from the `client` directory
+2. **Build fails**: Check that all dependencies are installed
+3. **API not working**: Verify environment variables are set
+4. **CORS errors**: Update CORS settings in server
 
 ## 📞 Support
 If you encounter any issues during deployment, check:
