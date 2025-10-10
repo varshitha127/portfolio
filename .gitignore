@@ -7,6 +7,7 @@ build/
 dist/
 */build/
 */dist/
+client/build/
 
 # Environment variables
 .env
@@ -102,9 +103,15 @@ server/logs/
 server/uploads/
 server/.env
 
+# Build artifacts
+client/build/
+client/build.sh
+
 # Client specific
 client/build/
 client/.env
+# But allow public folder
+!client/public/
 
 # Vercel
 .vercel
