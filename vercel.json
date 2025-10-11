@@ -14,11 +14,11 @@
   "routes": [
     {
       "src": "/(.*\\..+)$",
-      "dest": "/$1"
+      "dest": "/client/build/$1"
     },
     {
       "src": "/.*",
-      "dest": "/index.html"
+      "dest": "/client/build/index.html"
     }
   ],
   "env": {
