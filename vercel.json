@@ -13,12 +13,12 @@
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "/client/build/static/$1"
+      "src": "/(.*\\..+)$",
+      "dest": "/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/client/build/index.html"
+      "src": "/.*",
+      "dest": "/index.html"
     }
   ],
   "env": {
