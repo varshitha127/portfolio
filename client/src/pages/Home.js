@@ -87,9 +87,11 @@ const Home = () => {
               className="flex-shrink-0"
             >
               <img
-                src={process.env.PUBLIC_URL + '/varsh_image.jpg'}
+                src="/varsh_image.jpg"
                 alt="Lakkireddy Varshitha"
                 className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover border-4 border-primary-200 shadow-lg"
+                width="256"
+                height="256"
                 style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}
               />
             </motion.div>

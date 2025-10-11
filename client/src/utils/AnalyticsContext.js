@@ -13,6 +13,7 @@ export const useAnalytics = () => {
 };
 
 export const AnalyticsProvider = ({ children }) => {
+
   const [analytics, setAnalytics] = useState({
     pageViews: {},
     interactions: [],
@@ -24,9 +25,12 @@ export const AnalyticsProvider = ({ children }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
+  const hasBackend = Boolean(process.env.REACT_APP_ANALYTICS_ENDPOINT);
+  const api = axios.create({ baseURL: process.env.REACT_APP_ANALYTICS_ENDPOINT || '' });
 
   // Track page view
   const trackPageView = useCallback(async (page) => {
+
     try {
       const pageData = {
         page,
@@ -38,11 +42,11 @@ export const AnalyticsProvider = ({ children }) => {
         language: navigator.language
       };
 
-      // Only try to send to backend if we're in development or have a backend
-      if (process.env.NODE_ENV === 'development') {
-        await axios.post('/api/analytics/page-view', pageData);
+      // Only send to backend if a backend is configured or running locally in development
+      if (hasBackend || process.env.NODE_ENV === 'development') {
+        await api.post('/api/analytics/page-view', pageData);
       }
-      
+
       setAnalytics(prev => ({
         ...prev,
         pageViews: {
@@ -57,10 +61,11 @@ export const AnalyticsProvider = ({ children }) => {
         console.error('Failed to track page view:', error);
       }
     }
-  }, []);
+  }, [hasBackend, api]);
 
   // Track user interaction
   const trackInteraction = useCallback(async (type, details) => {
+
     try {
       const interactionData = {
         type,
@@ -69,25 +74,24 @@ export const AnalyticsProvider = ({ children }) => {
         page: location.pathname
       };
 
-      // Only try to send to backend if we're in development or have a backend
-      if (process.env.NODE_ENV === 'development') {
-        await axios.post('/api/analytics/interaction', interactionData);
+      if (hasBackend || process.env.NODE_ENV === 'development') {
+        await api.post('/api/analytics/interaction', interactionData);
       }
-      
+
       setAnalytics(prev => ({
         ...prev,
         interactions: [...prev.interactions, interactionData]
       }));
     } catch (error) {
-      // Silently handle analytics errors in production
       if (process.env.NODE_ENV === 'development') {
         console.error('Failed to track interaction:', error);
       }
     }
-  }, [location.pathname]);
+  }, [location.pathname, hasBackend, api]);
 
   // Track download
   const trackDownload = useCallback(async (fileType, fileName) => {
+
     try {
       const downloadData = {
         fileType,
@@ -96,8 +100,10 @@ export const AnalyticsProvider = ({ children }) => {
         page: location.pathname
       };
 
-      await axios.post('/api/analytics/download', downloadData);
-      
+      if (hasBackend || process.env.NODE_ENV === 'development') {
+        await api.post('/api/analytics/download', downloadData);
+      }
+
       setAnalytics(prev => ({
         ...prev,
         downloads: {
@@ -106,12 +112,15 @@ export const AnalyticsProvider = ({ children }) => {
         }
       }));
     } catch (error) {
-      console.error('Failed to track download:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to track download:', error);
+      }
     }
-  }, [location.pathname]);
+  }, [location.pathname, hasBackend, api]);
 
   // Track contact form submission
   const trackContactSubmission = useCallback(async (contactData) => {
+
     try {
       const submissionData = {
         ...contactData,
@@ -119,19 +128,24 @@ export const AnalyticsProvider = ({ children }) => {
         page: location.pathname
       };
 
-      await axios.post('/api/analytics/contact', submissionData);
-      
+      if (hasBackend || process.env.NODE_ENV === 'development') {
+        await api.post('/api/analytics/contact', submissionData);
+      }
+
       setAnalytics(prev => ({
         ...prev,
         contactSubmissions: [...prev.contactSubmissions, submissionData]
       }));
     } catch (error) {
-      console.error('Failed to track contact submission:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to track contact submission:', error);
+      }
     }
-  }, [location.pathname]);
+  }, [location.pathname, hasBackend, api]);
 
   // Track feedback
   const trackFeedback = useCallback(async (feedbackData) => {
+
     try {
       const feedback = {
         ...feedbackData,
@@ -139,42 +153,56 @@ export const AnalyticsProvider = ({ children }) => {
         page: location.pathname
       };
 
-      await axios.post('/api/analytics/feedback', feedback);
-      
+      if (hasBackend || process.env.NODE_ENV === 'development') {
+        await api.post('/api/analytics/feedback', feedback);
+      }
+
       setAnalytics(prev => ({
         ...prev,
         feedback: [...prev.feedback, feedback]
       }));
     } catch (error) {
-      console.error('Failed to track feedback:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to track feedback:', error);
+      }
     }
-  }, [location.pathname]);
+  }, [location.pathname, hasBackend, api]);
 
   // Get analytics data
   const getAnalyticsData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('/api/analytics/dashboard');
+      if (!(hasBackend || process.env.NODE_ENV === 'development')) {
+        return analytics;
+      }
+      const response = await api.get('/api/analytics/dashboard');
       setAnalytics(response.data);
       return response.data;
     } catch (error) {
-      console.error('Failed to get analytics data:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to get analytics data:', error);
+      }
       throw error;
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [hasBackend, api, analytics]);
 
   // Get analytics insights
   const getAnalyticsInsights = useCallback(async () => {
     try {
-      const response = await axios.get('/api/analytics/insights');
+      if (!(hasBackend || process.env.NODE_ENV === 'development')) {
+        return {};
+      }
+      const response = await api.get('/api/analytics/insights');
       return response.data;
     } catch (error) {
-      console.error('Failed to get analytics insights:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to get analytics insights:', error);
+      }
       throw error;
     }
-  }, []);
+  }, [hasBackend, api]);
 
   // Track page view on route change
   useEffect(() => {
@@ -191,13 +219,14 @@ export const AnalyticsProvider = ({ children }) => {
       language: navigator.language
     };
 
-    // Only try to send to backend if we're in development or have a backend
-    if (process.env.NODE_ENV === 'development') {
-      axios.post('/api/analytics/session', sessionData).catch(error => {
-        console.error('Failed to track session:', error);
+    if (hasBackend || process.env.NODE_ENV === 'development') {
+      api.post('/api/analytics/session', sessionData).catch(error => {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to track session:', error);
+        }
       });
     }
-  }, []);
+  }, [hasBackend, api]);
 
   const value = {
     analytics,
