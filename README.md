@@ -1,6 +1,6 @@
 # 🤖 AI-Powered Portfolio Website
 
-An advanced personal portfolio website that integrates AI features to create an interactive and engaging experience for visitors. This portfolio showcases your skills, projects, and experience while providing AI-powered tools like chatbots, resume analysis, and voice navigation.
+An advanced personal portfolio website that integrates AI features to create an interactive and engaging experience for visitors. This portfolio showcases my skills, projects, and experience while providing AI-powered tools like chatbots, resume analysis, and voice navigation.
 
 ## ✨ Features
 
@@ -236,8 +236,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you have any questions or need help:
 - Create an issue on GitHub
-- Email: your.email@example.com
-- LinkedIn: [Your LinkedIn Profile]
+- Email: lakkireddyvarshithareddy@gmail.com
+- LinkedIn: www.linkedin.com/in/varshithareddy-lakkireddy-1b1326290
+- Github: www.github.com/varshitha127
 
 ---
 
